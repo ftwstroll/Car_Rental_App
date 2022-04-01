@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/public/style.css">
+
+</head>
+<body>
+  <div id="navbar" >
+    <a onclick="window.location.href='https://CarRental.samueldiaz11.repl.co';">
+   <img  id="header-img" src='/img/automobile-g19e3b280d_640.png'>   
+    </a>
+  <nav>
+    
+    
+<button class="nav-buttons" onclick="window.location.href='../cust_add/';">
+      Add Customer
+    </button>
+
+  <button class="nav-buttons" onclick="window.location.href='../vehicle_add/';">
+      Add Vehicle
+    </button>
+ 
+  <button class="nav-buttons" onclick="window.location.href='../rental_add/';">
+      Rent Vehicle
+    </button>
+
+  <button class="nav-buttons" onclick="window.location.href='../search/';">
+      Search
+    </button>
+  </nav>
+  </div>
+<br>
+<h3>Choose any of the four search options. Full or partial entries may be used. All records containing the information entered will be shown. </h3>
+
+
+  
+<table>
+<tr>
+  <td width="250px">
+
+  <h5>Customer Search </h5>
+  <form id="form1">
+
+  Name:
+  <input type="text" id="Name" name="name">
+  <br>
+  <input type="submit" value="Submit">
+  </form>
+  <br>
+  <form id="form2">
+  <br>
+  Phone:
+  <input type="text" id="phone" name="phone" size="13" >
+  <br>
+<input type="submit" value="Submit">
+
+  </form>
+</td>
+<td>
+
+
+  <h5>Vehicle Search </h5>
+  <form id='form3'>
+
+  Vin:
+  <input type="text" id="VehicleID" name="vin">
+      <br>
+  <input type="submit" value="Submit">
+  </form>
+  <br>
+  <br>
+    
+  <form id="form4">
+  Description:
+  <input type="text" id="description" name="description">
+
+  <br>
+  <input type="submit" value="Submit">
+
+  </form>
+</td>
+</tr>
+</table>
+
+
+<div id="displayResults"></div>
+  
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+            crossorigin="anonymous"></script>
+
+  <script>
+      $(function() {
+
+      
+       $('form').on('submit', function (e) {
+          var data =  $(this).serialize();
+          var url = "/api/search";
+          $.ajax({
+              type : 'GET',
+              url  : url,
+              data : data,
+              success :  function(data){
+
+                if(data.found){
+                  if(data.found.length == 0){
+                    $("#displayResults").html('<br>0 Results' );
+                  } else {
+                var results = [ '<br><table>' ];
+                var color = '#e5e5e5';
+                data.found.forEach( function(ele) {
+                  
+                  results.push('<tr bgcolor="'+color+'">');
+                  ele.forEach( function(column) {
+                    results.push('<td>'+column+'</td>');
+                  });
+                  results.push('</tr>');
+                  
+                  if (color == '#e5e5e5'){
+                    color = '#ffffff';
+                  } else {
+                    color = '#e5e5e5';
+                  }
+                  
+                });
+                results.push('</table>')
+                
+
+
+                
+                $("#displayResults").html(results.join(''));
+                  }
+                }
+              }
+          });
+          e.preventDefault();
+        });
+      });
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/public/style.css">
+
+</head>
+<body>
+  <div id="navbar" >
+    <a onclick="window.location.href='https://CarRental.samueldiaz11.repl.co';">
+   <img  id="header-img" src='/img/automobile-g19e3b280d_640.png'>   
+    </a>
+  <nav>
+    
+    
+<button class="nav-buttons" onclick="window.location.href='../cust_add/';">
+      Add Customer
+    </button>
+
+  <button class="nav-buttons" onclick="window.location.href='../vehicle_add/';">
+      Add Vehicle
+    </button>
+ 
+  <button class="nav-buttons" onclick="window.location.href='../rental_add/';">
+      Rent Vehicle
+    </button>
+
+  <button class="nav-buttons" onclick="window.location.href='../search/';">
+      Search
+    </button>
+  </nav>
+  </div>
+<br>
+
+<h3>Add all the information about a new vehicle. </h3>
+
+
+<form id="vehicle_add" method="post">
+  Vin:<br>
+  <input type="text" name="vehicleID" required  pattern=".{17,17}" required title="17 characters">
+  <br>
+  Description:
+  <br>
+  <input type="text" name="description" maxlength="30" size="30" required>
+  <br>
+  Year(YYYY):
+  <br>
+   <input type="number" name="year" min="1800" max="2025" size="4" required>
+   <br>
+   Type:
+   <br>
+   <select name="type">
+      <option value="Compact">Compact</option>
+      <option value="Medium">Medium</option>
+      <option value="Large">Large</option>
+      <option value="SUV">SUV</option>
+      <option value="Truck">Truck</option>
+      <option value="Van">Van</option>
+  </select>
+
+   <br>
+   Category:
+   <br>
+   <select name="category">
+      <option value="Basic">Basic</option>
+      <option value="Luxury">Luxury</option>
+  </select>
+  <br><br>
+  <input type="submit" value="Submit">
+</form>
+
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+            crossorigin="anonymous"></script>
+    <script>
+      $(function() {
+        $('#vehicle_add').submit(function(e){
+          var url = "/api/vehicle_add";
+          $.ajax({
+            type: "POST",
+            url: url,
+            data: $(this).serialize(),
+            success: function(data)
+            {
+              alert(data);
+            }
+          });
+          e.preventDefault();
+        });
+      });
+   </script>
+</body>
+</html>

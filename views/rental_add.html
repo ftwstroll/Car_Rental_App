@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/public/style.css">
+
+</head>
+<body>
+  <div id="navbar" >
+    <a onclick="window.location.href='https://CarRental.samueldiaz11.repl.co';">
+   <img  id="header-img" src='/img/automobile-g19e3b280d_640.png'>   
+    </a>
+  <nav>
+    
+    
+<button class="nav-buttons" onclick="window.location.href='../cust_add/';">
+      Add Customer
+    </button>
+
+  <button class="nav-buttons" onclick="window.location.href='../vehicle_add/';">
+      Add Vehicle
+    </button>
+ 
+  <button class="nav-buttons" onclick="window.location.href='../rental_add/';">
+      Rent Vehicle
+    </button>
+
+  <button class="nav-buttons" onclick="window.location.href='../search/';">
+      Search
+    </button>
+  </nav>
+  </div>
+<br>
+
+
+<h3>Add all the information about a new rental reservation (this will find a free
+vehicle of the appropriate type and category for a specific rental period). </h3>
+
+
+<form id="rental_search">
+  
+<br>
+  Start Date:<br>
+    <input id="start_date" type="date" name="startDate" min='2019-01-01' required>
+
+  <br><br>
+  Return Date:
+  <br>
+     <input id="return_date" type="date" name="returnDate" min='2019-01-01' required>
+
+  <br><br>
+   Type:
+   <br>
+     <select name="type">
+        <option value="Compact">Compact</option>
+        <option value="Medium">Medium</option>
+        <option value="Large">Large</option>
+        <option value="SUV">SUV</option>
+        <option value="Truck">Truck</option>
+        <option value="Van">Van</option>
+    </select>
+
+   <br><br>
+    Category:
+   <br>
+   <select name="category">
+      <option value="Basic">Basic</option>
+      <option value="Luxury">Luxury</option>
+  </select>
+  <br><br>
+  <input type="submit" value="Submit">
+</form>
+
+<div id="displayResults"></div>
+  
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
+            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+            crossorigin="anonymous"></script>
+    <script>
+      $(function() {
+
+        
+        $('#rental_search').submit(function(e){
+          
+          var url = "/api/rental_add";
+          $.ajax({
+            type: "GET",
+            url: url,
+            data: $(this).serialize(),
+            success: function(data)
+            {
+           
+              var results = [];
+
+              if( data.vehicles.length == 0){
+                $('#displayResults').html('0 Results');
+              } else {
+                results.push('<br><br>Rental Cost: $'+data.cost+'<br> <h3>Results: ' +data.vehicles.length +'</h3>                                              Select vehicle for '+ data.name +'to rent                                                 <form id="result_add"><select name="vehicleId" size="'+data.vehicles.length+'" required>');
+                
+                data.vehicles.forEach( function(ele) {
+                  results.push('"<option value="'+ele[0]+'">'+ele[0]+' '+ele[1]+'</option>');
+                });
+
+                results.push('</select>');
+                results.push('<br><label for="phone">Enter customer\'s phone number(format: 123-456-7890):</label><br>');
+                results.push('<input type="tel" id="phone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="13" required>');
+               // results.push('<option value="0">On Return Date</option>');
+               // results.push('<option value="1">On Order Date</option>');
+               // results.push('</select>');
+          
+                //results.push('<input type="hidden" name="phone" value="'+data.phone+'">');
+                results.push('<input type="hidden" name="startDate" value="'+data.startDate+'">');
+                results.push('<input type="hidden" name="returnDate" value=\"'+data.returnDate+'">');
+                results.push('<input type="hidden" name="cost" value="'+data.cost+'">');
+          
+                results.push('<br><input type="submit" value="Select">')
+                results.push('</form>');
+
+                $('#displayResults').html(results.join(''));
+              }
+            }
+          });
+
+          
+          e.preventDefault();
+        });
+
+        
+        $('#displayResults').on('submit','#result_add', function(e){
+          var url = "/api/rental_add";
+          $.ajax({
+            type: "PUT",
+            url: url,
+            data: $(this).serialize(),
+            success: function(data)
+            {
+              alert(data);
+            }
+          });
+          e.preventDefault();
+        });
+        
+      });
+   </script>
+
+</body>
+</html>
